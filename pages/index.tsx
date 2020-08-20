@@ -142,7 +142,7 @@ export default function Home() {
   const [data, setData] = useState(natFives);
 
   useEffect(() => {
-    const storagedData = localStorage.getItem("@SW-Nat5");
+    const storagedData = localStorage.getItem("@SW-Nat5v1");
 
     if (storagedData) {
       setData(JSON.parse(storagedData));
@@ -151,13 +151,34 @@ export default function Home() {
 
   const handleToggleActive = useCallback(
     (natData: NatFive, type: string) => {
+      if (natData.name === "Anubis" && type === "light") {
+        alert("Amarna = NAT 6");
+      }
+      if (
+        (natData.name === "Sky Dancer" &&
+          type !== "dark" &&
+          type !== "light") ||
+        (natData.name === "Harp Magician" &&
+          type !== "dark" &&
+          type !== "light") ||
+        (natData.name === "Cannon Girl" &&
+          type !== "wind" &&
+          type !== "dark") ||
+        (natData.name === "Vampire" && type !== "dark" && type !== "light") ||
+        (natData.name === "Anubis" && type !== "dark") ||
+        (natData.name === "Ninja" && type !== "dark") ||
+        (natData.name === "Neost. Agent" && type !== "dark") ||
+        (natData.name === "Horus" && type !== "light")
+      ) {
+        return;
+      }
       const newNatData = { ...natData, [type]: !natData[type] };
       const newData = data.map((nat) =>
         nat.name === newNatData.name ? newNatData : nat
       );
 
       setData(newData);
-      localStorage.setItem("@SW-Nat5", JSON.stringify(newData));
+      localStorage.setItem("@SW-Nat5v1", JSON.stringify(newData));
     },
     [data]
   );
@@ -181,14 +202,14 @@ export default function Home() {
       if (file.type === "application/json") {
         const stringResult = String(e.target.result);
         setData(JSON.parse(stringResult));
-        localStorage.setItem("@SW-Nat5", stringResult);
+        localStorage.setItem("@SW-Nat5v1", stringResult);
       } else {
         const csvParse = csv.parse as any;
         csvParse(String(e.target.result), (err, data) => {
           if (err) return;
           const objData = convertToArrayOfObjects(data);
           setData(objData);
-          localStorage.setItem("@SW-Nat5", JSON.stringify(objData));
+          localStorage.setItem("@SW-Nat5v1", JSON.stringify(objData));
         });
       }
     };
