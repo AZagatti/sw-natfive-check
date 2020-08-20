@@ -183,7 +183,8 @@ export default function Home() {
         setData(JSON.parse(stringResult));
         localStorage.setItem("@SW-Nat5", stringResult);
       } else {
-        csv.parse(String(e.target.result), (err, data) => {
+        const csvParse = csv.parse as any;
+        csvParse(String(e.target.result), (err, data) => {
           if (err) return;
           const objData = convertToArrayOfObjects(data);
           setData(objData);
