@@ -26,7 +26,7 @@ const Grid: any = styled.ul`
   display: grid;
   justify-content: center;
   padding: 5rem;
-  background-color: #fff;
+  background-color: var(--background-color);
 
   grid-template-columns: repeat(auto-fit, minmax(25rem, 25rem));
   grid-gap: 5rem;
@@ -47,8 +47,8 @@ Grid.Item = styled.li`
   flex-direction: column;
   list-style: none;
   padding: 2rem 1rem;
-  background-color: #fff;
-  box-shadow: 0px 2px 4px #3a3a3a;
+  background-color: var(--background-color);
+  box-shadow: 0px 2px 4px var(--text-color);
   border-radius: 0.5rem;
 
   div {
@@ -87,6 +87,7 @@ const Top = styled.div`
   display: flex;
   align-items: flex-end;
   justify-content: space-evenly;
+  background-color: var(--background-color);
 
   @media (max-width: 600px) {
     flex-direction: column;
@@ -98,8 +99,8 @@ const DownloadButton = styled.button`
   min-width: 15rem;
   padding: 1rem 2rem;
   margin-top: 2rem;
-  background-color: #3a3a3a;
-  color: #fff;
+  background-color: var(--text-color);
+  color: var(--background-color);
   font-size: 1.6rem;
   border: 0;
   border-radius: 0.5rem;
@@ -109,8 +110,8 @@ const DownloadCSVButton = styled(CsvDownload)`
   min-width: 15rem;
   padding: 1rem 2rem;
   margin-top: 2rem;
-  background-color: #3a3a3a;
-  color: #fff;
+  background-color: var(--text-color);
+  color: var(--background-color);
   font-size: 1.6rem;
   border: 0;
   border-radius: 0.5rem;
@@ -120,8 +121,8 @@ const FileLabel = styled.label`
   min-width: 15rem;
   padding: 1rem 2rem;
   margin-top: 2rem;
-  background-color: #3a3a3a;
-  color: #fff;
+  background-color: var(--text-color);
+  color: var(--background-color);
   font-size: 1.6rem;
   border: 0;
   border-radius: 0.5rem;
@@ -135,7 +136,7 @@ const FileLabel = styled.label`
 
 const MainWrapper = styled.div`
   width: 100%;
-  background-color: #fff;
+  background-color: var(--background-color);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -151,11 +152,54 @@ const NickLabel = styled.label`
   display: flex;
   flex-direction: column;
   font-size: 16px;
+
   input {
     width: 300px;
-    border: 1px solid #3a3a3a;
+    border: 1px solid var(--text-color);
     border-radius: 4px;
     padding: 8px 16px;
+    font-size: 18px;
+  }
+`;
+
+const Toggle = styled.label`
+  display: flex;
+  align-items: center;
+  color: #8e879e;
+  font-size: 1.4rem;
+
+  .switch {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    width: 5rem;
+    height: 2rem;
+    border-radius: 2rem;
+    margin-right: 1rem;
+    background-color: #3a3a3a;
+
+    &::after {
+      content: "";
+      position: absolute;
+      width: 1.7rem;
+      height: 1.7rem;
+      border-radius: 50%;
+      background-color: white;
+      top: 0.145rem;
+      transition: all 0.3s;
+      left: 3rem;
+    }
+  }
+
+  .checkbox:checked + .switch {
+    background-color: #cecece;
+    &::after {
+      left: 0.2rem;
+    }
+  }
+
+  .checkbox {
+    display: none;
   }
 `;
 
@@ -270,6 +314,23 @@ export default function Home() {
     imageRef.current.style.height = "100%";
   }, []);
 
+  const handleChangeTheme = useCallback(() => {
+    const bgColor = window
+      .getComputedStyle(document.documentElement)
+      .getPropertyValue("--background-color");
+
+    if (bgColor === "#fff") {
+      document.documentElement.style.setProperty(
+        "--background-color",
+        "#3a3a3a"
+      );
+      document.documentElement.style.setProperty("--text-color", "#fff");
+    } else {
+      document.documentElement.style.setProperty("--background-color", "#fff");
+      document.documentElement.style.setProperty("--text-color", "#3a3a3a");
+    }
+  }, []);
+
   const setNick = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setNickname(e.target.value);
     localStorage.setItem("@SW-Nickv1", e.target.value);
@@ -278,6 +339,16 @@ export default function Home() {
   return (
     <Container>
       <Top>
+        <Toggle>
+          <input
+            id="toggle"
+            type="checkbox"
+            className="checkbox"
+            onChange={() => handleChangeTheme()}
+          />
+          <label htmlFor="toggle" className="switch" />
+          Change theme
+        </Toggle>
         <DownloadButton type="button" onClick={() => handleDownloadData()}>
           Download JSON
         </DownloadButton>
