@@ -12,6 +12,7 @@ import lightImg from "../assets/img/light.png";
 import waterImg from "../assets/img/water.png";
 import windImg from "../assets/img/wind.png";
 import convertToArrayOfObjects from "../utils/convertToArrayOfObjects";
+import Ad from "../components/Ad";
 
 const Container: any = styled.div`
   display: flex;
@@ -351,6 +352,7 @@ export default function Home() {
             </Grid.Item>
           ))}
         </Grid>
+        <Ad />
       </MainWrapper>
     </Container>
   );
