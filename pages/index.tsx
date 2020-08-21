@@ -163,6 +163,9 @@ const NickLabel = styled.label`
   input {
     width: 300px;
     border: 1px solid var(--text-color);
+    background-color: var(--background-color);
+
+    color: var(--text-color);
     border-radius: 4px;
     padding: 8px 16px;
     font-size: 18px;
