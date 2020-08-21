@@ -1,7 +1,8 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef, ChangeEvent } from "react";
 import styled, { css } from "styled-components";
 import CsvDownload from "react-json-to-csv";
 import csv from "csv";
+import domtoimage from "dom-to-image";
 
 import natFives from "../initialData.json";
 
@@ -24,6 +25,7 @@ const Grid: any = styled.ul`
   display: grid;
   justify-content: center;
   padding: 5rem;
+  background-color: #fff;
 
   grid-template-columns: repeat(auto-fit, minmax(1rem, 25rem));
   grid-gap: 5rem;
@@ -44,6 +46,7 @@ Grid.Item = styled.li`
   flex-direction: column;
   list-style: none;
   padding: 2rem 1rem;
+  background-color: #fff;
   box-shadow: 0px 2px 4px #3a3a3a;
   border-radius: 0.5rem;
 
@@ -63,7 +66,7 @@ const Button = styled.button<{ isActive: boolean }>`
   border: 0;
   outline: 0;
   background: transparent;
-  opacity: 0.5;
+  opacity: 0.2;
 
   img {
     width: 4rem;
@@ -129,6 +132,32 @@ const FileLabel = styled.label`
   }
 `;
 
+const MainWrapper = styled.div`
+  width: 100%;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  > h1 {
+    font-size: 32px;
+    margin-top: 20px;
+  }
+`;
+
+const NickLabel = styled.label`
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+  input {
+    width: 300px;
+    border: 1px solid #3a3a3a;
+    border-radius: 4px;
+    padding: 8px 16px;
+  }
+`;
+
 interface NatFive {
   name: string;
   dark: boolean;
@@ -139,11 +168,18 @@ interface NatFive {
 }
 
 export default function Home() {
+  const imageRef = useRef(null);
+
   const [data, setData] = useState(natFives);
+  const [nickname, setNickname] = useState("");
 
   useEffect(() => {
     const storagedData = localStorage.getItem("@SW-Nat5v1");
+    const storagedNick = localStorage.getItem("@SW-Nickv1");
 
+    if (storagedNick) {
+      setNickname(storagedNick);
+    }
     if (storagedData) {
       setData(JSON.parse(storagedData));
     }
@@ -215,11 +251,30 @@ export default function Home() {
     };
   }, []);
 
+  const handleDownloadImage = useCallback(async () => {
+    const dataUrl = await domtoimage.toPng(imageRef.current);
+
+    const link = document.createElement("a");
+    link.href = dataUrl;
+    link.download = "natfives" + ".png";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }, []);
+
+  const setNick = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setNickname(e.target.value);
+    localStorage.setItem("@SW-Nickv1", e.target.value);
+  }, []);
+
   return (
     <Container>
       <Top>
         <DownloadButton type="button" onClick={() => handleDownloadData()}>
           Download JSON
+        </DownloadButton>
+        <DownloadButton type="button" onClick={() => handleDownloadImage()}>
+          Download PNG
         </DownloadButton>
         <DownloadCSVButton data={data} filename="natfives">
           Download CSV
@@ -234,50 +289,62 @@ export default function Home() {
           />
         </FileLabel>
       </Top>
-      <Grid>
-        {data.map((natData) => (
-          <Grid.Item key={natData.name}>
-            <div>
-              <Button
-                onClick={() => handleToggleActive(natData, "dark")}
-                isActive={natData.dark}
-                type="button"
-              >
-                <img src={darkImg} alt={`dark-${natData.name}`} />
-              </Button>
-              <Button
-                onClick={() => handleToggleActive(natData, "fire")}
-                isActive={natData.fire}
-                type="button"
-              >
-                <img src={fireImg} alt={`fire-${natData.name}`} />
-              </Button>
-              <Button
-                onClick={() => handleToggleActive(natData, "light")}
-                isActive={natData.light}
-                type="button"
-              >
-                <img src={lightImg} alt={`light-${natData.name}`} />
-              </Button>
-              <Button
-                onClick={() => handleToggleActive(natData, "water")}
-                isActive={natData.water}
-                type="button"
-              >
-                <img src={waterImg} alt={`water-${natData.name}`} />
-              </Button>
-              <Button
-                onClick={() => handleToggleActive(natData, "wind")}
-                isActive={natData.wind}
-                type="button"
-              >
-                <img src={windImg} alt={`wind-${natData.name}`} />
-              </Button>
-            </div>
-            <p>{natData.name}</p>
-          </Grid.Item>
-        ))}
-      </Grid>
+      <NickLabel htmlFor="nick">
+        Nickname
+        <input
+          id="nick"
+          type="text"
+          value={nickname}
+          onChange={(e) => setNick(e)}
+        />
+      </NickLabel>
+      <MainWrapper ref={imageRef}>
+        <h1>{nickname}</h1>
+        <Grid>
+          {data.map((natData) => (
+            <Grid.Item key={natData.name}>
+              <div>
+                <Button
+                  onClick={() => handleToggleActive(natData, "dark")}
+                  isActive={natData.dark}
+                  type="button"
+                >
+                  <img src={darkImg} alt={`dark-${natData.name}`} />
+                </Button>
+                <Button
+                  onClick={() => handleToggleActive(natData, "fire")}
+                  isActive={natData.fire}
+                  type="button"
+                >
+                  <img src={fireImg} alt={`fire-${natData.name}`} />
+                </Button>
+                <Button
+                  onClick={() => handleToggleActive(natData, "light")}
+                  isActive={natData.light}
+                  type="button"
+                >
+                  <img src={lightImg} alt={`light-${natData.name}`} />
+                </Button>
+                <Button
+                  onClick={() => handleToggleActive(natData, "water")}
+                  isActive={natData.water}
+                  type="button"
+                >
+                  <img src={waterImg} alt={`water-${natData.name}`} />
+                </Button>
+                <Button
+                  onClick={() => handleToggleActive(natData, "wind")}
+                  isActive={natData.wind}
+                  type="button"
+                >
+                  <img src={windImg} alt={`wind-${natData.name}`} />
+                </Button>
+              </div>
+              <p>{natData.name}</p>
+            </Grid.Item>
+          ))}
+        </Grid>
+      </MainWrapper>
     </Container>
   );
 }
