@@ -27,12 +27,12 @@ const Grid: any = styled.ul`
   padding: 5rem;
   background-color: #fff;
 
-  grid-template-columns: repeat(auto-fit, minmax(1rem, 25rem));
+  grid-template-columns: repeat(auto-fit, minmax(25rem, 25rem));
   grid-gap: 5rem;
   grid-template-rows: auto;
   grid-auto-flow: row;
   @media (max-width: 1024px) {
-    grid-template-columns: repeat(auto-fit, minmax(1rem, 20rem));
+    grid-template-columns: repeat(auto-fit, minmax(25rem, 25rem));
   }
   @media (max-width: 600px) {
     display: flex;
@@ -57,7 +57,7 @@ Grid.Item = styled.li`
   }
   p {
     text-align: center;
-    font-size: 1.6rem;
+    font-size: 24px;
     font-weight: bold;
   }
 `;
@@ -168,7 +168,8 @@ interface NatFive {
 }
 
 export default function Home() {
-  const imageRef = useRef(null);
+  const imageRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   const [data, setData] = useState(natFives);
   const [nickname, setNickname] = useState("");
@@ -252,6 +253,10 @@ export default function Home() {
   }, []);
 
   const handleDownloadImage = useCallback(async () => {
+    imageRef.current.style.width = "1440px";
+    imageRef.current.style.height = "720px";
+    gridRef.current.style.display = "grid";
+
     const dataUrl = await domtoimage.toPng(imageRef.current);
 
     const link = document.createElement("a");
@@ -260,6 +265,8 @@ export default function Home() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    imageRef.current.style.width = "100%";
+    imageRef.current.style.height = "100%";
   }, []);
 
   const setNick = useCallback((e: ChangeEvent<HTMLInputElement>) => {
@@ -300,7 +307,7 @@ export default function Home() {
       </NickLabel>
       <MainWrapper ref={imageRef}>
         <h1>{nickname}</h1>
-        <Grid>
+        <Grid ref={gridRef}>
           {data.map((natData) => (
             <Grid.Item key={natData.name}>
               <div>
