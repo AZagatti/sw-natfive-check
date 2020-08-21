@@ -38,6 +38,11 @@ export default class MyDocument extends Document<DocumentProps> {
     return (
       <Html>
         <Head>
+          <script
+            data-ad-client="ca-pub-6856691048766261"
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+          ></script>
           <link
             href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap"
             rel="stylesheet"
