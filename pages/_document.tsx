@@ -38,7 +38,6 @@ export default class MyDocument extends Document<DocumentProps> {
     return (
       <Html>
         <Head>
-          <title>NatFive Count - Summoners War</title>
           <meta
             name="description"
             content="NatFive Count made by André Zagatti"

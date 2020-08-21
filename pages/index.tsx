@@ -48,7 +48,8 @@ Grid.Item = styled.li`
   list-style: none;
   padding: 2rem 1rem;
   background-color: var(--background-color);
-  box-shadow: 0px 2px 4px var(--text-color);
+  color: var(--text-color);
+  box-shadow: 0px 2px 4px #000;
   border-radius: 0.5rem;
 
   div {
@@ -102,6 +103,7 @@ const DownloadButton = styled.button`
   background-color: var(--text-color);
   color: var(--background-color);
   font-size: 1.6rem;
+  font-weight: bold;
   border: 0;
   border-radius: 0.5rem;
 `;
@@ -113,6 +115,7 @@ const DownloadCSVButton = styled(CsvDownload)`
   background-color: var(--text-color);
   color: var(--background-color);
   font-size: 1.6rem;
+  font-weight: bold;
   border: 0;
   border-radius: 0.5rem;
 `;
@@ -124,6 +127,7 @@ const FileLabel = styled.label`
   background-color: var(--text-color);
   color: var(--background-color);
   font-size: 1.6rem;
+  font-weight: bold;
   border: 0;
   border-radius: 0.5rem;
   text-align: center;
@@ -144,6 +148,7 @@ const MainWrapper = styled.div`
   > h1 {
     font-size: 32px;
     margin-top: 20px;
+    color: var(--text-color);
   }
 `;
 
@@ -152,6 +157,8 @@ const NickLabel = styled.label`
   display: flex;
   flex-direction: column;
   font-size: 16px;
+  font-weight: bold;
+  color: var(--text-color);
 
   input {
     width: 300px;
@@ -165,8 +172,9 @@ const NickLabel = styled.label`
 const Toggle = styled.label`
   display: flex;
   align-items: center;
-  color: #8e879e;
+  color: var(--text-color);
   font-size: 1.4rem;
+  font-weight: bold;
 
   .switch {
     position: relative;
@@ -176,7 +184,7 @@ const Toggle = styled.label`
     height: 2rem;
     border-radius: 2rem;
     margin-right: 1rem;
-    background-color: #3a3a3a;
+    background-color: rgba(255, 200, 0);
 
     &::after {
       content: "";
@@ -187,14 +195,14 @@ const Toggle = styled.label`
       background-color: white;
       top: 0.145rem;
       transition: all 0.3s;
-      left: 3rem;
+      left: 0.2rem;
     }
   }
 
   .checkbox:checked + .switch {
     background-color: #cecece;
     &::after {
-      left: 0.2rem;
+      left: 3rem;
     }
   }
 
@@ -218,11 +226,16 @@ export default function Home() {
 
   const [data, setData] = useState(natFives);
   const [nickname, setNickname] = useState("");
+  const [theme, setTheme] = useState(false);
 
   useEffect(() => {
     const storagedData = localStorage.getItem("@SW-Nat5v1");
     const storagedNick = localStorage.getItem("@SW-Nickv1");
+    const storagedTheme = localStorage.getItem("@SW-Themev1");
 
+    if (storagedTheme) {
+      setTheme(true);
+    }
     if (storagedNick) {
       setNickname(storagedNick);
     }
@@ -230,6 +243,19 @@ export default function Home() {
       setData(JSON.parse(storagedData));
     }
   }, []);
+
+  useEffect(() => {
+    if (theme) {
+      document.documentElement.style.setProperty(
+        "--background-color",
+        "#3a3a3a"
+      );
+      document.documentElement.style.setProperty("--text-color", "#fff");
+    } else {
+      document.documentElement.style.setProperty("--background-color", "#fff");
+      document.documentElement.style.setProperty("--text-color", "#3a3a3a");
+    }
+  }, [theme]);
 
   const handleToggleActive = useCallback(
     (natData: NatFive, type: string) => {
@@ -315,21 +341,9 @@ export default function Home() {
   }, []);
 
   const handleChangeTheme = useCallback(() => {
-    const bgColor = window
-      .getComputedStyle(document.documentElement)
-      .getPropertyValue("--background-color");
-
-    if (bgColor === "#fff") {
-      document.documentElement.style.setProperty(
-        "--background-color",
-        "#3a3a3a"
-      );
-      document.documentElement.style.setProperty("--text-color", "#fff");
-    } else {
-      document.documentElement.style.setProperty("--background-color", "#fff");
-      document.documentElement.style.setProperty("--text-color", "#3a3a3a");
-    }
-  }, []);
+    localStorage.setItem("@SW-Themev1", !theme ? "true" : "");
+    setTheme((state) => !state);
+  }, [theme]);
 
   const setNick = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setNickname(e.target.value);
@@ -344,6 +358,7 @@ export default function Home() {
             id="toggle"
             type="checkbox"
             className="checkbox"
+            checked={theme}
             onChange={() => handleChangeTheme()}
           />
           <label htmlFor="toggle" className="switch" />
