@@ -352,7 +352,7 @@ export default function Home() {
             </Grid.Item>
           ))}
         </Grid>
-        <Ad />
+        {/* <Ad /> */}
       </MainWrapper>
     </Container>
   );
