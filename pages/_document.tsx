@@ -38,6 +38,27 @@ export default class MyDocument extends Document<DocumentProps> {
     return (
       <Html>
         <Head>
+          <title>NatFive Count - Summoners War</title>
+          <meta
+            name="description"
+            content="NatFive Count made by André Zagatti"
+          ></meta>
+          <meta name="author" content="André Luis Zagatti Adorna"></meta>
+          <meta name="keywords" content="Summoners War, Nat5, NatFive"></meta>
+          <meta name="og:title" content="NatFive Count - Summoners War"></meta>
+          <meta
+            name="og:description"
+            content="NatFive Count made by André Zagatti"
+          ></meta>
+          <meta name="og:type" content="website"></meta>
+          <meta name="og:locale" content="pt_BR"></meta>
+          <meta name="og:url" content="https://natfive.azagatti.dev/"></meta>
+          <meta
+            name="og:image"
+            content="https://res.cloudinary.com/zagatti/image/upload/v1598043520/natfive-logo_bwtgzr.jpg"
+          ></meta>
+
+          <link rel="canonical" href="https://natfive.azagatti.dev/" />
           <script
             data-ad-client="ca-pub-6856691048766261"
             async
