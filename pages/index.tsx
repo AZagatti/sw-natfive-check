@@ -187,7 +187,7 @@ const Toggle = styled.label`
     height: 2rem;
     border-radius: 2rem;
     margin-right: 1rem;
-    background-color: rgba(255, 200, 0);
+    background-color: #3a3a3a;
 
     &::after {
       content: "";
@@ -203,7 +203,7 @@ const Toggle = styled.label`
   }
 
   .checkbox:checked + .switch {
-    background-color: #cecece;
+    background-color: rgba(255, 200, 0);
     &::after {
       left: 3rem;
     }
@@ -327,8 +327,8 @@ export default function Home() {
   }, []);
 
   const handleDownloadImage = useCallback(async () => {
-    imageRef.current.style.width = "1440px";
-    imageRef.current.style.height = "720px";
+    imageRef.current.style.width = "1920px";
+    imageRef.current.style.height = "1080px";
     gridRef.current.style.display = "grid";
 
     const dataUrl = await domtoimage.toPng(imageRef.current);
