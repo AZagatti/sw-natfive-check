@@ -23,6 +23,7 @@ const Container: any = styled.div`
 
 const Grid: any = styled.ul`
   width: 100%;
+  height: 100%;
   display: grid;
   justify-content: center;
   padding: 5rem;
@@ -96,34 +97,51 @@ const Top = styled.div`
   }
 `;
 
-const DownloadButton = styled.button`
-  min-width: 15rem;
+interface DownloadButtonProps {
+  first?: boolean;
+}
+
+const DownloadButton = styled.button<DownloadButtonProps>`
+  min-width: 20rem;
   padding: 1rem 2rem;
-  margin-top: 2rem;
+  margin-top: 5rem;
   background-color: var(--text-color);
   color: var(--background-color);
   font-size: 1.6rem;
   font-weight: bold;
   border: 0;
   border-radius: 0.5rem;
+
+  @media (max-width: 600px) {
+    margin-top: 2rem;
+    ${({ first }) =>
+      first &&
+      css`
+        margin-top: 5rem;
+      `}
+  }
 `;
 
 const DownloadCSVButton = styled(CsvDownload)`
-  min-width: 15rem;
+  min-width: 20rem;
   padding: 1rem 2rem;
-  margin-top: 2rem;
+  margin-top: 5rem;
   background-color: var(--text-color);
   color: var(--background-color);
   font-size: 1.6rem;
   font-weight: bold;
   border: 0;
   border-radius: 0.5rem;
+
+  @media (max-width: 600px) {
+    margin-top: 2rem;
+  }
 `;
 
 const FileLabel = styled.label`
-  min-width: 15rem;
+  min-width: 20rem;
   padding: 1rem 2rem;
-  margin-top: 2rem;
+  margin-top: 5rem;
   background-color: var(--text-color);
   color: var(--background-color);
   font-size: 1.6rem;
@@ -132,6 +150,10 @@ const FileLabel = styled.label`
   border-radius: 0.5rem;
   text-align: center;
   cursor: pointer;
+
+  @media (max-width: 600px) {
+    margin-top: 2rem;
+  }
 
   input {
     display: none;
@@ -173,6 +195,9 @@ const NickLabel = styled.label`
 `;
 
 const Toggle = styled.label`
+  position: absolute;
+  top: 10px;
+  left: 45%;
   display: flex;
   align-items: center;
   color: var(--text-color);
@@ -211,6 +236,23 @@ const Toggle = styled.label`
 
   .checkbox {
     display: none;
+  }
+`;
+
+const Footer = styled.footer`
+  width: 100%;
+  padding: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  h2 {
+    color: var(--text-color);
+
+    a {
+      text-decoration: none;
+      color: var(--text-color);
+    }
   }
 `;
 
@@ -328,7 +370,6 @@ export default function Home() {
 
   const handleDownloadImage = useCallback(async () => {
     imageRef.current.style.width = "1920px";
-    imageRef.current.style.height = "1080px";
     gridRef.current.style.display = "grid";
 
     const dataUrl = await domtoimage.toPng(imageRef.current);
@@ -340,7 +381,6 @@ export default function Home() {
     link.click();
     document.body.removeChild(link);
     imageRef.current.style.width = "100%";
-    imageRef.current.style.height = "100%";
   }, []);
 
   const handleChangeTheme = useCallback(() => {
@@ -367,17 +407,21 @@ export default function Home() {
           <label htmlFor="toggle" className="switch" />
           Change theme
         </Toggle>
+        <DownloadButton
+          first
+          type="button"
+          onClick={() => handleDownloadImage()}
+        >
+          Download PNG
+        </DownloadButton>
         <DownloadButton type="button" onClick={() => handleDownloadData()}>
           Download JSON
-        </DownloadButton>
-        <DownloadButton type="button" onClick={() => handleDownloadImage()}>
-          Download PNG
         </DownloadButton>
         <DownloadCSVButton data={data} filename="natfives">
           Download CSV
         </DownloadCSVButton>
         <FileLabel htmlFor="import">
-          Import
+          Import JSON/CSV
           <input
             id="import"
             accept=".json,.csv,.txt"
@@ -443,6 +487,18 @@ export default function Home() {
         </Grid>
         {/* <Ad /> */}
       </MainWrapper>
+      <Footer>
+        <h2>
+          Made with ❤️ by{" "}
+          <a
+            href="https://www.linkedin.com/in/andre-zagatti/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            André Zagatti
+          </a>
+        </h2>
+      </Footer>
     </Container>
   );
 }
