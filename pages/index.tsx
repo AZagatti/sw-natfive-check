@@ -1,18 +1,21 @@
-import { useState, useCallback, useEffect, useRef, ChangeEvent } from "react";
-import styled, { css } from "styled-components";
-import CsvDownload from "react-json-to-csv";
-import csv from "csv";
-import domtoimage from "dom-to-image";
+import { useState, useCallback, useEffect, useRef, ChangeEvent } from 'react';
+import styled, { css } from 'styled-components';
+import CsvDownload from 'react-json-to-csv';
+import csv from 'csv';
+import domtoimage from 'dom-to-image';
+import Joi from 'joi';
 
-import natFives from "../initialData.json";
+import natFives from '../initialData.json';
 
-import darkImg from "../assets/img/dark.png";
-import fireImg from "../assets/img/fire.png";
-import lightImg from "../assets/img/light.png";
-import waterImg from "../assets/img/water.png";
-import windImg from "../assets/img/wind.png";
-import convertToArrayOfObjects from "../utils/convertToArrayOfObjects";
-import Ad from "../components/Ad";
+import darkImg from '../assets/img/dark.png';
+import fireImg from '../assets/img/fire.png';
+import lightImg from '../assets/img/light.png';
+import waterImg from '../assets/img/water.png';
+import windImg from '../assets/img/wind.png';
+import convertToArrayOfObjects from '../utils/convertToArrayOfObjects';
+import Ad from '../components/Ad';
+
+const mobsNames = natFives.map(item => item.name);
 
 const Container: any = styled.div`
   display: flex;
@@ -215,7 +218,7 @@ const Toggle = styled.label`
     background-color: #3a3a3a;
 
     &::after {
-      content: "";
+      content: '';
       position: absolute;
       width: 1.7rem;
       height: 1.7rem;
@@ -270,13 +273,13 @@ export default function Home() {
   const gridRef = useRef<HTMLDivElement>(null);
 
   const [data, setData] = useState(natFives);
-  const [nickname, setNickname] = useState("");
+  const [nickname, setNickname] = useState('');
   const [theme, setTheme] = useState(false);
 
   useEffect(() => {
-    const storagedData = localStorage.getItem("@SW-Nat5v1");
-    const storagedNick = localStorage.getItem("@SW-Nickv1");
-    const storagedTheme = localStorage.getItem("@SW-Themev1");
+    const storagedData = localStorage.getItem('@SW-Nat5v1.1');
+    const storagedNick = localStorage.getItem('@SW-Nickv1.1');
+    const storagedTheme = localStorage.getItem('@SW-Themev1.1');
 
     if (storagedTheme) {
       setTheme(true);
@@ -292,105 +295,136 @@ export default function Home() {
   useEffect(() => {
     if (theme) {
       document.documentElement.style.setProperty(
-        "--background-color",
-        "#3a3a3a"
+        '--background-color',
+        '#3a3a3a',
       );
-      document.documentElement.style.setProperty("--text-color", "#fff");
+      document.documentElement.style.setProperty('--text-color', '#fff');
     } else {
-      document.documentElement.style.setProperty("--background-color", "#fff");
-      document.documentElement.style.setProperty("--text-color", "#3a3a3a");
+      document.documentElement.style.setProperty('--background-color', '#fff');
+      document.documentElement.style.setProperty('--text-color', '#3a3a3a');
     }
   }, [theme]);
 
   const handleToggleActive = useCallback(
     (natData: NatFive, type: string) => {
-      if (natData.name === "Anubis" && type === "light") {
-        alert("Amarna = NAT 6");
+      if (natData.name === 'Anubis' && type === 'light') {
+        alert('Amarna = NAT 6');
       }
       if (
-        (natData.name === "Sky Dancer" &&
-          type !== "dark" &&
-          type !== "light") ||
-        (natData.name === "Harp Magician" &&
-          type !== "dark" &&
-          type !== "light") ||
-        (natData.name === "Cannon Girl" &&
-          type !== "wind" &&
-          type !== "dark") ||
-        (natData.name === "Vampire" && type !== "dark" && type !== "light") ||
-        (natData.name === "Anubis" && type !== "dark") ||
-        (natData.name === "Ninja" && type !== "dark") ||
-        (natData.name === "Neost. Agent" && type !== "dark") ||
-        (natData.name === "Horus" && type !== "light")
+        (natData.name === 'Sky Dancer' &&
+          type !== 'dark' &&
+          type !== 'light') ||
+        (natData.name === 'Harp Magician' &&
+          type !== 'dark' &&
+          type !== 'light') ||
+        (natData.name === 'Cannon Girl' &&
+          type !== 'wind' &&
+          type !== 'dark') ||
+        (natData.name === 'Vampire' && type !== 'dark' && type !== 'light') ||
+        (natData.name === 'Anubis' && type !== 'dark') ||
+        (natData.name === 'Ninja' && type !== 'dark') ||
+        (natData.name === 'Neost. Agent' && type !== 'dark') ||
+        (natData.name === 'Horus' && type !== 'light')
       ) {
         return;
       }
       const newNatData = { ...natData, [type]: !natData[type] };
-      const newData = data.map((nat) =>
-        nat.name === newNatData.name ? newNatData : nat
+      const newData = data.map(nat =>
+        nat.name === newNatData.name ? newNatData : nat,
       );
 
       setData(newData);
-      localStorage.setItem("@SW-Nat5v1", JSON.stringify(newData));
+      localStorage.setItem('@SW-Nat5v1.1', JSON.stringify(newData));
     },
-    [data]
+    [data],
   );
 
   const handleDownloadData = useCallback(() => {
     const json = JSON.stringify(data);
-    const blob = new Blob([json], { type: "application/json" });
+    const blob = new Blob([json], { type: 'application/json' });
     const href = URL.createObjectURL(blob);
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.href = href;
-    link.download = "natfives" + ".json";
+    link.download = 'natfives.json';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  }, []);
+  }, [data]);
 
   const handleLoadFile = useCallback((file: File) => {
+    const schema = Joi.array()
+      .items(
+        Joi.object().keys({
+          name: Joi.string()
+            .valid(...mobsNames)
+            .required(),
+          dark: Joi.boolean().required(),
+          fire: Joi.boolean().required(),
+          light: Joi.boolean().required(),
+          water: Joi.boolean().required(),
+          wind: Joi.boolean().required(),
+        }),
+      )
+      .required();
+
+    if (!file) return;
+
     const fileReader = new FileReader();
-    fileReader.readAsText(file, "UTF-8");
-    fileReader.onload = (e) => {
-      if (file.type === "application/json") {
+    fileReader.readAsText(file, 'UTF-8');
+    fileReader.onload = async e => {
+      if (file.type === 'application/json') {
         const stringResult = String(e.target.result);
-        setData(JSON.parse(stringResult));
-        localStorage.setItem("@SW-Nat5v1", stringResult);
+        const jsonResult = JSON.parse(stringResult);
+        try {
+          await schema.validateAsync(jsonResult);
+          setData(jsonResult);
+          localStorage.setItem('@SW-Nat5v1.1', stringResult);
+        } catch (err) {
+          console.log(err.message);
+        }
       } else {
         const csvParse = csv.parse as any;
-        csvParse(String(e.target.result), (err, data) => {
-          if (err) return;
-          const objData = convertToArrayOfObjects(data);
-          setData(objData);
-          localStorage.setItem("@SW-Nat5v1", JSON.stringify(objData));
+        csvParse(String(e.target.result), async (err, value) => {
+          if (err) {
+            return;
+          }
+          const objData = convertToArrayOfObjects(value);
+
+          try {
+            await schema.validateAsync(objData);
+            setData(objData);
+            localStorage.setItem('@SW-Nat5v1.1', JSON.stringify(objData));
+          } catch (error) {
+            console.log(error.message);
+          }
         });
       }
     };
   }, []);
 
   const handleDownloadImage = useCallback(async () => {
-    imageRef.current.style.width = "1920px";
-    gridRef.current.style.display = "grid";
+    imageRef.current.style.width = '1920px';
+    gridRef.current.style.display = 'grid';
 
     const dataUrl = await domtoimage.toPng(imageRef.current);
 
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.href = dataUrl;
-    link.download = "natfives" + ".png";
+    link.download = 'natfives.png';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    imageRef.current.style.width = "100%";
+    imageRef.current.style.width = '100%';
   }, []);
 
   const handleChangeTheme = useCallback(() => {
-    localStorage.setItem("@SW-Themev1", !theme ? "true" : "");
-    setTheme((state) => !state);
+    localStorage.setItem('@SW-Themev1.1', !theme ? 'true' : '');
+    setTheme(state => !state);
   }, [theme]);
 
   const setNick = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setNickname(e.target.value);
-    localStorage.setItem("@SW-Nickv1", e.target.value);
+    localStorage.setItem('@SW-Nickv1.1', e.target.value);
   }, []);
 
   return (
@@ -426,7 +460,7 @@ export default function Home() {
             id="import"
             accept=".json,.csv,.txt"
             type="file"
-            onChange={(e) => handleLoadFile(e.target.files[0])}
+            onChange={e => handleLoadFile(e.target.files[0])}
           />
         </FileLabel>
       </Top>
@@ -436,49 +470,49 @@ export default function Home() {
           id="nick"
           type="text"
           value={nickname}
-          onChange={(e) => setNick(e)}
+          onChange={e => setNick(e)}
         />
       </NickLabel>
       <MainWrapper ref={imageRef}>
         <h1>{nickname}</h1>
         <Grid ref={gridRef}>
-          {data.map((natData) => (
+          {data.map(natData => (
             <Grid.Item key={natData.name}>
               <div>
                 <Button
-                  onClick={() => handleToggleActive(natData, "dark")}
-                  isActive={natData.dark}
-                  type="button"
-                >
-                  <img src={darkImg} alt={`dark-${natData.name}`} />
-                </Button>
-                <Button
-                  onClick={() => handleToggleActive(natData, "fire")}
-                  isActive={natData.fire}
-                  type="button"
-                >
-                  <img src={fireImg} alt={`fire-${natData.name}`} />
-                </Button>
-                <Button
-                  onClick={() => handleToggleActive(natData, "light")}
-                  isActive={natData.light}
-                  type="button"
-                >
-                  <img src={lightImg} alt={`light-${natData.name}`} />
-                </Button>
-                <Button
-                  onClick={() => handleToggleActive(natData, "water")}
+                  onClick={() => handleToggleActive(natData, 'water')}
                   isActive={natData.water}
                   type="button"
                 >
                   <img src={waterImg} alt={`water-${natData.name}`} />
                 </Button>
                 <Button
-                  onClick={() => handleToggleActive(natData, "wind")}
+                  onClick={() => handleToggleActive(natData, 'fire')}
+                  isActive={natData.fire}
+                  type="button"
+                >
+                  <img src={fireImg} alt={`fire-${natData.name}`} />
+                </Button>
+                <Button
+                  onClick={() => handleToggleActive(natData, 'wind')}
                   isActive={natData.wind}
                   type="button"
                 >
                   <img src={windImg} alt={`wind-${natData.name}`} />
+                </Button>
+                <Button
+                  onClick={() => handleToggleActive(natData, 'light')}
+                  isActive={natData.light}
+                  type="button"
+                >
+                  <img src={lightImg} alt={`light-${natData.name}`} />
+                </Button>
+                <Button
+                  onClick={() => handleToggleActive(natData, 'dark')}
+                  isActive={natData.dark}
+                  type="button"
+                >
+                  <img src={darkImg} alt={`dark-${natData.name}`} />
                 </Button>
               </div>
               <p>{natData.name}</p>
@@ -489,7 +523,11 @@ export default function Home() {
       </MainWrapper>
       <Footer>
         <h2>
-          Made with ❤️ by{" "}
+          Made with{' '}
+          <span role="img" aria-label="heart">
+            ❤️
+          </span>{' '}
+          by{' '}
           <a
             href="https://www.linkedin.com/in/andre-zagatti/"
             target="_blank"

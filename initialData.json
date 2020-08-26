@@ -1,5 +1,13 @@
 [
   {
+    "name": "Anubis",
+    "dark": false,
+    "fire": false,
+    "light": false,
+    "water": false,
+    "wind": false
+  },
+  {
     "name": "Archangel",
     "dark": false,
     "fire": false,
@@ -25,6 +33,14 @@
   },
   {
     "name": "Beast Rider",
+    "dark": false,
+    "fire": false,
+    "light": false,
+    "water": false,
+    "wind": false
+  },
+  {
+    "name": "Cannon Girl",
     "dark": false,
     "fire": false,
     "light": false,
@@ -64,7 +80,7 @@
     "wind": false
   },
   {
-    "name": "Dragon Knigth",
+    "name": "Dragon Knight",
     "dark": false,
     "fire": false,
     "light": false,
@@ -88,7 +104,23 @@
     "wind": false
   },
   {
+    "name": "Harp Magician",
+    "dark": false,
+    "fire": false,
+    "light": false,
+    "water": false,
+    "wind": false
+  },
+  {
     "name": "Hell Lady",
+    "dark": false,
+    "fire": false,
+    "light": false,
+    "water": false,
+    "wind": false
+  },
+  {
+    "name": "Horus",
     "dark": false,
     "fire": false,
     "light": false,
@@ -113,6 +145,22 @@
   },
   {
     "name": "Monkey King",
+    "dark": false,
+    "fire": false,
+    "light": false,
+    "water": false,
+    "wind": false
+  },
+  {
+    "name": "Neost. Agent",
+    "dark": false,
+    "fire": false,
+    "light": false,
+    "water": false,
+    "wind": false
+  },
+  {
+    "name": "Ninja",
     "dark": false,
     "fire": false,
     "light": false,
@@ -184,6 +232,14 @@
     "wind": false
   },
   {
+    "name": "Sky Dancer",
+    "dark": false,
+    "fire": false,
+    "light": false,
+    "water": false,
+    "wind": false
+  },
+  {
     "name": "Unicorn",
     "dark": false,
     "fire": false,
@@ -201,62 +257,6 @@
   },
   {
     "name": "Vampire",
-    "dark": false,
-    "fire": false,
-    "light": false,
-    "water": false,
-    "wind": false
-  },
-  {
-    "name": "Sky Dancer",
-    "dark": false,
-    "fire": false,
-    "light": false,
-    "water": false,
-    "wind": false
-  },
-  {
-    "name": "Harp Magician",
-    "dark": false,
-    "fire": false,
-    "light": false,
-    "water": false,
-    "wind": false
-  },
-  {
-    "name": "Cannon Girl",
-    "dark": false,
-    "fire": false,
-    "light": false,
-    "water": false,
-    "wind": false
-  },
-  {
-    "name": "Anubis",
-    "dark": false,
-    "fire": false,
-    "light": false,
-    "water": false,
-    "wind": false
-  },
-  {
-    "name": "Ninja",
-    "dark": false,
-    "fire": false,
-    "light": false,
-    "water": false,
-    "wind": false
-  },
-  {
-    "name": "Neost. Agent",
-    "dark": false,
-    "fire": false,
-    "light": false,
-    "water": false,
-    "wind": false
-  },
-  {
-    "name": "Horus",
     "dark": false,
     "fire": false,
     "light": false,
