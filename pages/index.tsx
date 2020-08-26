@@ -29,11 +29,11 @@ const Grid: any = styled.ul`
   height: 100%;
   display: grid;
   justify-content: center;
-  padding: 5rem;
+  padding: 20px;
   background-color: var(--background-color);
 
   grid-template-columns: repeat(auto-fit, minmax(25rem, 25rem));
-  grid-gap: 5rem;
+  grid-gap: 20px;
   grid-template-rows: auto;
   grid-auto-flow: row;
   @media (max-width: 1024px) {
@@ -115,6 +115,11 @@ const DownloadButton = styled.button<DownloadButtonProps>`
   border: 0;
   border-radius: 0.5rem;
 
+  @media (max-width: 850px) {
+    font-size: 1.4rem;
+    min-width: 16rem;
+  }
+
   @media (max-width: 600px) {
     margin-top: 2rem;
     ${({ first }) =>
@@ -136,6 +141,11 @@ const DownloadCSVButton = styled(CsvDownload)`
   border: 0;
   border-radius: 0.5rem;
 
+  @media (max-width: 850px) {
+    font-size: 1.4rem;
+    min-width: 16rem;
+  }
+
   @media (max-width: 600px) {
     margin-top: 2rem;
   }
@@ -153,6 +163,11 @@ const FileLabel = styled.label`
   border-radius: 0.5rem;
   text-align: center;
   cursor: pointer;
+
+  @media (max-width: 850px) {
+    font-size: 1.4rem;
+    min-width: 16rem;
+  }
 
   @media (max-width: 600px) {
     margin-top: 2rem;
@@ -173,6 +188,12 @@ const MainWrapper = styled.div`
   > h1 {
     font-size: 32px;
     margin-top: 20px;
+    color: var(--text-color);
+  }
+
+  > h2 {
+    font-size: 28px;
+    margin-top: 15px;
     color: var(--text-color);
   }
 `;
@@ -427,6 +448,12 @@ export default function Home() {
     localStorage.setItem('@SW-Nickv1.1', e.target.value);
   }, []);
 
+  const natCount = data.reduce(
+    (acc, mob) =>
+      acc + +mob.dark + +mob.fire + +mob.water + +mob.light + +mob.wind,
+    0,
+  );
+
   return (
     <Container>
       <Top>
@@ -475,6 +502,7 @@ export default function Home() {
       </NickLabel>
       <MainWrapper ref={imageRef}>
         <h1>{nickname}</h1>
+        <h2>{natCount} nat fives</h2>
         <Grid ref={gridRef}>
           {data.map(natData => (
             <Grid.Item key={natData.name}>

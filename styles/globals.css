@@ -23,7 +23,7 @@ body,
 input,
 button,
 textarea {
-  font-family: "Open Sans";
+  font-family: 'Poppins';
 }
 :root {
   font-size: 60%;
